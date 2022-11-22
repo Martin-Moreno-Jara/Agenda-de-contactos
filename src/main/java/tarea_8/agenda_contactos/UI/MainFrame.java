@@ -4,6 +4,10 @@
  */
 package tarea_8.agenda_contactos.UI;
 
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import tarea_8.agenda_contactos.Data.Contacto;
+
 /**
  *
  * @author usuario
@@ -104,26 +108,25 @@ public class MainFrame extends javax.swing.JFrame {
             .addGroup(panel_edicionLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panel_edicionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panel_edicionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(panel_edicionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(panel_edicionLayout.createSequentialGroup()
-                                .addComponent(boton_limpiar)
-                                .addGap(18, 18, 18)
-                                .addComponent(boton_guardar))
-                            .addGroup(panel_edicionLayout.createSequentialGroup()
-                                .addGroup(panel_edicionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel2)
-                                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(72, 72, 72)
-                                .addGroup(panel_edicionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(campo_nombre, javax.swing.GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE)
-                                    .addComponent(campo_apellido)
-                                    .addComponent(campo_numero))))
+                    .addGroup(panel_edicionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addGroup(panel_edicionLayout.createSequentialGroup()
-                            .addComponent(jLabel5)
-                            .addGap(34, 34, 34)
-                            .addComponent(campo_correo, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(boton_limpiar)
+                            .addGap(18, 18, 18)
+                            .addComponent(boton_guardar))
+                        .addGroup(panel_edicionLayout.createSequentialGroup()
+                            .addGroup(panel_edicionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel2)
+                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGap(72, 72, 72)
+                            .addGroup(panel_edicionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(campo_nombre, javax.swing.GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE)
+                                .addComponent(campo_apellido)
+                                .addComponent(campo_numero))))
+                    .addGroup(panel_edicionLayout.createSequentialGroup()
+                        .addComponent(jLabel5)
+                        .addGap(34, 34, 34)
+                        .addComponent(campo_correo, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(panel_edicionLayout.createSequentialGroup()
                         .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -194,6 +197,11 @@ public class MainFrame extends javax.swing.JFrame {
         });
 
         boton_eliminar.setText("Eliminar");
+        boton_eliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                boton_eliminarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout panel_agendaLayout = new javax.swing.GroupLayout(panel_agenda);
         panel_agenda.setLayout(panel_agendaLayout);
@@ -205,8 +213,7 @@ public class MainFrame extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(campo_buscar, javax.swing.GroupLayout.PREFERRED_SIZE, 401, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(campo_buscar, javax.swing.GroupLayout.PREFERRED_SIZE, 401, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(panel_agendaLayout.createSequentialGroup()
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(boton_eliminar)
@@ -311,7 +318,34 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_boton_limpiarActionPerformed
 
     private void boton_guardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton_guardarActionPerformed
-        // TODO add your handling code here:
+        String nombre = campo_nombre.getText();
+        String apellido = campo_apellido.getText();
+        String numero = campo_numero.getText();
+        String correo = campo_correo.getText();
+        String direccion = campo_direccion.getText();
+        
+        Contacto nuevo_contacto = new Contacto(nombre,apellido,numero,correo,direccion);
+        
+        if(nombre.isEmpty()|| apellido.isEmpty() || numero.isEmpty() ){
+            JOptionPane.showMessageDialog(null,"Debe ingresar al menos nombre, apellido y número","Datos insuficientes",JOptionPane.ERROR_MESSAGE);
+        }
+        else{
+            DefaultTableModel modelo = (DefaultTableModel) tabla_contactos.getModel();
+            if(nuevo_contacto.getCorreo().isEmpty()){
+                nuevo_contacto.setCorreo("-");
+            }
+            if(nuevo_contacto.getDireccion_domicilio().isEmpty()){
+                nuevo_contacto.setDireccion_domicilio("-");
+            }
+            modelo.addRow(new Object []{nuevo_contacto.getNombre(),nuevo_contacto.getApellido(),nuevo_contacto.getNumero_telefonico(),
+                nuevo_contacto.getCorreo(),nuevo_contacto.getDireccion_domicilio()});
+            campo_nombre.setText("");
+            campo_apellido.setText("");
+            campo_numero.setText("");
+            campo_correo.setText("");
+            campo_direccion.setText("");
+        }
+        
     }//GEN-LAST:event_boton_guardarActionPerformed
 
     private void campo_correoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campo_correoActionPerformed
@@ -321,6 +355,17 @@ public class MainFrame extends javax.swing.JFrame {
     private void campo_nombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campo_nombreActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_campo_nombreActionPerformed
+
+    private void boton_eliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton_eliminarActionPerformed
+        int row = tabla_contactos.getSelectedRow();
+        if(row<0){
+             JOptionPane.showMessageDialog(null,"No se ha seleccionado ningún contacto","No seleccionado",JOptionPane.ERROR_MESSAGE);
+        }
+        else{
+            DefaultTableModel modelo = (DefaultTableModel) tabla_contactos.getModel();
+            modelo.removeRow(row);
+        }
+    }//GEN-LAST:event_boton_eliminarActionPerformed
 
     /**
      * @param args the command line arguments
