@@ -4,6 +4,9 @@
  */
 package tarea_8.agenda_contactos.UI;
 
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import tarea_8.agenda_contactos.Data.Contacto;
@@ -355,7 +358,9 @@ public class MainFrame extends javax.swing.JFrame {
     private void campo_nombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campo_nombreActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_campo_nombreActionPerformed
-
+    private void boton_confirmar_eliminacionActionPerformed(java.awt.event.ActionEvent evt){
+        
+    }
     private void boton_eliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton_eliminarActionPerformed
         int row = tabla_contactos.getSelectedRow();
         if(row<0){
@@ -363,7 +368,32 @@ public class MainFrame extends javax.swing.JFrame {
         }
         else{
             DefaultTableModel modelo = (DefaultTableModel) tabla_contactos.getModel();
-            modelo.removeRow(row);
+            JDialog confirmacion = new JDialog(this,true);
+            confirmacion.setTitle("Confirmación");
+            confirmacion.setLayout(null);
+            confirmacion.setBounds(0,0,350,200);
+            confirmacion.setLocationRelativeTo(null);
+            JLabel texto_confirmacion = new JLabel("¿Estás seguro que quieres eliminar este contacto?");
+            texto_confirmacion.setBounds(15, 20, 300, 40);
+            JButton boton_confirmar_eliminacion = new JButton("Eliminar");
+            boton_confirmar_eliminacion.setBounds(40, 60, 100, 25);
+            
+            boton_confirmar_eliminacion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                boton_confirmar_eliminacionActionPerformed(evt);
+            }
+        });
+            JButton boton_cancelar = new JButton("Cancelar");
+            boton_cancelar.setBounds(150, 60, 100, 25);
+            confirmacion.add(texto_confirmacion);
+            confirmacion.add(boton_confirmar_eliminacion);
+            confirmacion.add(boton_cancelar);
+            confirmacion.setVisible(true);
+            if(evt.getSource()==boton_confirmar_eliminacion){
+              modelo.removeRow(row);
+
+            }
+
         }
     }//GEN-LAST:event_boton_eliminarActionPerformed
 
