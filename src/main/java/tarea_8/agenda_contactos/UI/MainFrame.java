@@ -16,6 +16,10 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import tarea_8.agenda_contactos.Data.Contacto;
+import javax.swing.table.TableRowSorter;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import javax.swing.RowFilter;
 
 /**
  *
@@ -63,6 +67,7 @@ public class MainFrame extends javax.swing.JFrame implements Serializable {
         tabla_contactos = new javax.swing.JTable();
         boton_editar = new javax.swing.JButton();
         boton_eliminar = new javax.swing.JButton();
+        boton_buscar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -201,6 +206,11 @@ public class MainFrame extends javax.swing.JFrame implements Serializable {
                 campo_buscarActionPerformed(evt);
             }
         });
+        campo_buscar.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                campo_buscarKeyTyped(evt);
+            }
+        });
 
         tabla_contactos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -234,18 +244,27 @@ public class MainFrame extends javax.swing.JFrame implements Serializable {
             }
         });
 
+        boton_buscar.setText("Buscar");
+        boton_buscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                boton_buscarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panel_agendaLayout = new javax.swing.GroupLayout(panel_agenda);
         panel_agenda.setLayout(panel_agendaLayout);
         panel_agendaLayout.setHorizontalGroup(
             panel_agendaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_agendaLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(9, Short.MAX_VALUE)
                 .addGroup(panel_agendaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(panel_agendaLayout.createSequentialGroup()
                         .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(campo_buscar, javax.swing.GroupLayout.PREFERRED_SIZE, 401, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(33, 33, 33))
+                        .addComponent(campo_buscar, javax.swing.GroupLayout.PREFERRED_SIZE, 335, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(boton_buscar)
+                        .addContainerGap())
                     .addGroup(panel_agendaLayout.createSequentialGroup()
                         .addComponent(boton_eliminar)
                         .addGap(18, 18, 18)
@@ -262,8 +281,9 @@ public class MainFrame extends javax.swing.JFrame implements Serializable {
                 .addGap(34, 34, 34)
                 .addGroup(panel_agendaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
-                    .addComponent(campo_buscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(26, 26, 26)
+                    .addComponent(campo_buscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(boton_buscar))
+                .addGap(25, 25, 25)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 340, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panel_agendaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -491,6 +511,33 @@ public class MainFrame extends javax.swing.JFrame implements Serializable {
         }
     }//GEN-LAST:event_boton_actualizarActionPerformed
 
+    private void boton_buscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton_buscarActionPerformed
+    if(evt.getSource()==boton_buscar){
+            campo_buscar.addKeyListener(new KeyAdapter(){
+    @Override    
+    public void keyReleased(final KeyEvent e){
+            String cadena = campo_buscar.getText();
+            campo_buscar.setText(cadena);
+            repaint();
+            filtro();
+        }
+    });
+    }
+
+    }//GEN-LAST:event_boton_buscarActionPerformed
+
+    private void campo_buscarKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_campo_buscarKeyTyped
+        trsfiltro = new TableRowSorter(tabla_contactos.getModel());
+        tabla_contactos.setRowSorter(trsfiltro);
+    }//GEN-LAST:event_campo_buscarKeyTyped
+
+    public void filtro(){
+        filtro = campo_buscar.getText().toLowerCase();
+        trsfiltro.setRowFilter(RowFilter.regexFilter(campo_buscar.getText(), 0));
+    }
+    private TableRowSorter trsfiltro;
+    String filtro;
+    
     /**
      * @param args the command line arguments
      */
@@ -528,6 +575,7 @@ public class MainFrame extends javax.swing.JFrame implements Serializable {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton boton_actualizar;
+    private javax.swing.JButton boton_buscar;
     private javax.swing.JButton boton_editar;
     private javax.swing.JButton boton_eliminar;
     private javax.swing.JButton boton_guardar;
