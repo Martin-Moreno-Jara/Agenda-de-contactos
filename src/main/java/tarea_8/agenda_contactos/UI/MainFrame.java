@@ -428,35 +428,42 @@ public class MainFrame extends javax.swing.JFrame implements Serializable {
     }//GEN-LAST:event_boton_eliminarActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        DefaultTableModel modelo = (DefaultTableModel) tabla_contactos.getModel();
-        Vector<Vector> estado_tabla = modelo.getDataVector();
+                DefaultTableModel model = (DefaultTableModel) tabla_contactos.getModel();
+        Vector<Vector> tableData = model.getDataVector();
         
-        try{
-            FileOutputStream archivo = new FileOutputStream("file.dat");
-            ObjectOutputStream estado = new ObjectOutputStream(archivo);
+        //Saving of object in a file
+        try {
+            FileOutputStream file = new FileOutputStream("file.bin");
+            ObjectOutputStream output = new ObjectOutputStream(file);
             
-            estado.writeObject(estado_tabla);
-            
-            estado.close();
-            archivo.close();
-           
-        }
-        catch(Exception ex){
+            // Method for serialization of object
+            output.writeObject(tableData);
+
+            output.close();
+            file.close();
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }//GEN-LAST:event_formWindowClosing
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        try{
-            FileInputStream archivo = new FileInputStream("file.dat");
-            ObjectInputStream cargar = new ObjectInputStream(archivo);
+         try {
+            // TODO add your handling code here:
+            FileInputStream file = new FileInputStream("file.bin");
+            ObjectInputStream input = new ObjectInputStream(file);
+            // Method for deserialization of object
+            Vector<Vector> tableData = (Vector<Vector>)input.readObject();
             
-            Vector<Vector> estado_tabla = (Vector<Vector>)cargar.readObject();
+            input.close();
+            file.close();
             
-            cargar.close();
-            archivo.close();
-                  
-        }catch(Exception ex){
+            
+            DefaultTableModel model = (DefaultTableModel) tabla_contactos.getModel();
+            for (int i = 0; i < tableData.size(); i++) {
+                Vector row = tableData.get(i);
+                model.addRow(new Object[]{row.get(0), row.get(1), row.get(2), row.get(3),row.get(4)});
+            }
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
         
