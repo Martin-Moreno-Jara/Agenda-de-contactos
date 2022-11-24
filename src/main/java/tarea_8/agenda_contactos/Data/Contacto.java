@@ -4,11 +4,13 @@
  */
 package tarea_8.agenda_contactos.Data;
 
+import java.io.Serializable;
+
 /**
  *
  * @author usuario
  */
-public class Contacto {
+public class Contacto implements Serializable {
     private String nombre;
     private String apellido;
     private String numero_telefonico;

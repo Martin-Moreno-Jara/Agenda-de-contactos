@@ -4,6 +4,12 @@
  */
 package tarea_8.agenda_contactos.UI;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.util.Vector;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -15,7 +21,7 @@ import tarea_8.agenda_contactos.Data.Contacto;
  *
  * @author usuario
  */
-public class MainFrame extends javax.swing.JFrame {
+public class MainFrame extends javax.swing.JFrame implements Serializable {
 
     /**
      * Creates new form MainFrame
@@ -49,6 +55,7 @@ public class MainFrame extends javax.swing.JFrame {
         campo_correo = new javax.swing.JTextField();
         boton_guardar = new javax.swing.JButton();
         boton_limpiar = new javax.swing.JButton();
+        boton_actualizar = new javax.swing.JButton();
         panel_agenda = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
         campo_buscar = new javax.swing.JTextField();
@@ -58,8 +65,17 @@ public class MainFrame extends javax.swing.JFrame {
         boton_eliminar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         main_panel.setBackground(new java.awt.Color(204, 255, 204));
+        main_panel.setMinimumSize(new java.awt.Dimension(919, 587));
 
         titulo_label.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
         titulo_label.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -90,7 +106,7 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
-        boton_guardar.setText("Guardar");
+        boton_guardar.setText("Crear contacto");
         boton_guardar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 boton_guardarActionPerformed(evt);
@@ -104,37 +120,48 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
+        boton_actualizar.setText("Actualizar");
+        boton_actualizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                boton_actualizarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panel_edicionLayout = new javax.swing.GroupLayout(panel_edicion);
         panel_edicion.setLayout(panel_edicionLayout);
         panel_edicionLayout.setHorizontalGroup(
             panel_edicionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panel_edicionLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panel_edicionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panel_edicionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addGroup(panel_edicionLayout.createSequentialGroup()
-                            .addComponent(boton_limpiar)
-                            .addGap(18, 18, 18)
-                            .addComponent(boton_guardar))
-                        .addGroup(panel_edicionLayout.createSequentialGroup()
-                            .addGroup(panel_edicionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel2)
-                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGap(72, 72, 72)
-                            .addGroup(panel_edicionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(campo_nombre, javax.swing.GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE)
-                                .addComponent(campo_apellido)
-                                .addComponent(campo_numero))))
+                .addGroup(panel_edicionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(panel_edicionLayout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addGap(34, 34, 34)
-                        .addComponent(campo_correo, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(panel_edicionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panel_edicionLayout.createSequentialGroup()
+                                .addGroup(panel_edicionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(72, 72, 72)
+                                .addGroup(panel_edicionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(campo_nombre, javax.swing.GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE)
+                                    .addComponent(campo_apellido)
+                                    .addComponent(campo_numero)))
+                            .addGroup(panel_edicionLayout.createSequentialGroup()
+                                .addComponent(jLabel5)
+                                .addGap(34, 34, 34)
+                                .addComponent(campo_correo, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(panel_edicionLayout.createSequentialGroup()
+                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(campo_direccion, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap(33, Short.MAX_VALUE))
                     .addGroup(panel_edicionLayout.createSequentialGroup()
-                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(campo_direccion, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(33, Short.MAX_VALUE))
+                        .addComponent(boton_limpiar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(boton_guardar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(boton_actualizar)
+                        .addGap(23, 23, 23))))
         );
         panel_edicionLayout.setVerticalGroup(
             panel_edicionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -162,7 +189,8 @@ public class MainFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 91, Short.MAX_VALUE)
                 .addGroup(panel_edicionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(boton_guardar)
-                    .addComponent(boton_limpiar))
+                    .addComponent(boton_limpiar)
+                    .addComponent(boton_actualizar))
                 .addGap(59, 59, 59))
         );
 
@@ -211,18 +239,18 @@ public class MainFrame extends javax.swing.JFrame {
         panel_agendaLayout.setHorizontalGroup(
             panel_agendaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panel_agendaLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(panel_agendaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(panel_agendaLayout.createSequentialGroup()
-                        .addGap(18, 18, 18)
                         .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(campo_buscar, javax.swing.GroupLayout.PREFERRED_SIZE, 401, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(campo_buscar, javax.swing.GroupLayout.PREFERRED_SIZE, 401, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(33, 33, 33))
                     .addGroup(panel_agendaLayout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(boton_eliminar)
                         .addGap(18, 18, 18)
-                        .addComponent(boton_editar)))
-                .addGap(33, 33, 33))
+                        .addComponent(boton_editar, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(32, 32, 32))))
             .addGroup(panel_agendaLayout.createSequentialGroup()
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1)
@@ -236,11 +264,11 @@ public class MainFrame extends javax.swing.JFrame {
                     .addComponent(jLabel7)
                     .addComponent(campo_buscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(26, 26, 26)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 340, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panel_agendaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(boton_editar)
-                    .addComponent(boton_eliminar))
+                    .addComponent(boton_eliminar)
+                    .addComponent(boton_editar))
                 .addGap(35, 35, 35))
         );
 
@@ -301,7 +329,26 @@ public class MainFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void boton_editarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton_editarActionPerformed
-        // TODO add your handling code here:
+        int row = tabla_contactos.getSelectedRow();
+        if(evt.getSource()==boton_editar){
+             if(row<0){
+             JOptionPane.showMessageDialog(null,"No se ha seleccionado ningún contacto","No seleccionado",JOptionPane.ERROR_MESSAGE);
+        }
+             else{
+            DefaultTableModel modelo = (DefaultTableModel) tabla_contactos.getModel(); 
+            String editar_nombre = (String) modelo.getValueAt(row, 0);
+            String editar_apellido = (String) modelo.getValueAt(row, 1);
+            String editar_numero = (String) modelo.getValueAt(row, 2);
+            String editar_correo = (String) modelo.getValueAt(row, 3);
+            String editar_direccion = (String) modelo.getValueAt(row, 4);
+            
+            campo_nombre.setText(editar_nombre);
+            campo_apellido.setText(editar_apellido);
+            campo_numero.setText(editar_numero);
+            campo_correo.setText(editar_correo);
+            campo_direccion.setText(editar_direccion);
+             }
+        }
     }//GEN-LAST:event_boton_editarActionPerformed
 
     private void campo_buscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campo_buscarActionPerformed
@@ -327,21 +374,23 @@ public class MainFrame extends javax.swing.JFrame {
         String correo = campo_correo.getText();
         String direccion = campo_direccion.getText();
         
-        Contacto nuevo_contacto = new Contacto(nombre,apellido,numero,correo,direccion);
+       // Contacto nuevo_contacto = new Contacto(nombre,apellido,numero,correo,direccion);
         
         if(nombre.isEmpty()|| apellido.isEmpty() || numero.isEmpty() ){
             JOptionPane.showMessageDialog(null,"Debe ingresar al menos nombre, apellido y número","Datos insuficientes",JOptionPane.ERROR_MESSAGE);
         }
         else{
             DefaultTableModel modelo = (DefaultTableModel) tabla_contactos.getModel();
-            if(nuevo_contacto.getCorreo().isEmpty()){
-                nuevo_contacto.setCorreo("-");
+            if("".equals(correo)){
+                correo="-";
             }
-            if(nuevo_contacto.getDireccion_domicilio().isEmpty()){
-                nuevo_contacto.setDireccion_domicilio("-");
+            if("".equals(direccion)){
+                direccion="-";
             }
-            modelo.addRow(new Object []{nuevo_contacto.getNombre(),nuevo_contacto.getApellido(),nuevo_contacto.getNumero_telefonico(),
-                nuevo_contacto.getCorreo(),nuevo_contacto.getDireccion_domicilio()});
+           // modelo.addRow(new Object []{nuevo_contacto.getNombre(),nuevo_contacto.getApellido(),nuevo_contacto.getNumero_telefonico(),
+           //     nuevo_contacto.getCorreo(),nuevo_contacto.getDireccion_domicilio()});
+            modelo.addRow(new Object []{nombre,apellido,numero,correo,direccion});
+            
             campo_nombre.setText("");
             campo_apellido.setText("");
             campo_numero.setText("");
@@ -358,44 +407,82 @@ public class MainFrame extends javax.swing.JFrame {
     private void campo_nombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_campo_nombreActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_campo_nombreActionPerformed
-    private void boton_confirmar_eliminacionActionPerformed(java.awt.event.ActionEvent evt){
-        
-    }
+
     private void boton_eliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton_eliminarActionPerformed
         int row = tabla_contactos.getSelectedRow();
         if(row<0){
              JOptionPane.showMessageDialog(null,"No se ha seleccionado ningún contacto","No seleccionado",JOptionPane.ERROR_MESSAGE);
         }
         else{
-            DefaultTableModel modelo = (DefaultTableModel) tabla_contactos.getModel();
-            JDialog confirmacion = new JDialog(this,true);
-            confirmacion.setTitle("Confirmación");
-            confirmacion.setLayout(null);
-            confirmacion.setBounds(0,0,350,200);
-            confirmacion.setLocationRelativeTo(null);
-            JLabel texto_confirmacion = new JLabel("¿Estás seguro que quieres eliminar este contacto?");
-            texto_confirmacion.setBounds(15, 20, 300, 40);
-            JButton boton_confirmar_eliminacion = new JButton("Eliminar");
-            boton_confirmar_eliminacion.setBounds(40, 60, 100, 25);
-            
-            boton_confirmar_eliminacion.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                boton_confirmar_eliminacionActionPerformed(evt);
-            }
-        });
-            JButton boton_cancelar = new JButton("Cancelar");
-            boton_cancelar.setBounds(150, 60, 100, 25);
-            confirmacion.add(texto_confirmacion);
-            confirmacion.add(boton_confirmar_eliminacion);
-            confirmacion.add(boton_cancelar);
-            confirmacion.setVisible(true);
-            if(evt.getSource()==boton_confirmar_eliminacion){
-              modelo.removeRow(row);
+            DefaultTableModel modelo = (DefaultTableModel) tabla_contactos.getModel();            
+            if(evt.getSource()==boton_eliminar){
+                ventana_confirmacion ventana = new ventana_confirmacion(this,true);
+                ventana.setVisible(true);
+                if(ventana.getVerificador()==true){
+                    modelo.removeRow(row);
+                }
 
             }
 
         }
     }//GEN-LAST:event_boton_eliminarActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        DefaultTableModel modelo = (DefaultTableModel) tabla_contactos.getModel();
+        Vector<Vector> estado_tabla = modelo.getDataVector();
+        
+        try{
+            FileOutputStream archivo = new FileOutputStream("file.dat");
+            ObjectOutputStream estado = new ObjectOutputStream(archivo);
+            
+            estado.writeObject(estado_tabla);
+            
+            estado.close();
+            archivo.close();
+           
+        }
+        catch(Exception ex){
+            ex.printStackTrace();
+        }
+    }//GEN-LAST:event_formWindowClosing
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        try{
+            FileInputStream archivo = new FileInputStream("file.dat");
+            ObjectInputStream cargar = new ObjectInputStream(archivo);
+            
+            Vector<Vector> estado_tabla = (Vector<Vector>)cargar.readObject();
+            
+            cargar.close();
+            archivo.close();
+                  
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        
+    }//GEN-LAST:event_formWindowOpened
+
+    private void boton_actualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton_actualizarActionPerformed
+        String nombre = campo_nombre.getText();
+        String apellido = campo_apellido.getText();
+        String numero = campo_numero.getText();
+        String correo = campo_correo.getText();
+        String direccion = campo_direccion.getText();
+        int row = tabla_contactos.getSelectedRow();
+        DefaultTableModel modelo = (DefaultTableModel) tabla_contactos.getModel();
+
+        if(nombre.isEmpty()|| apellido.isEmpty() || numero.isEmpty() ){
+            JOptionPane.showMessageDialog(null,"Debe ingresar al menos nombre, apellido y número","Datos insuficientes",JOptionPane.ERROR_MESSAGE);
+        }
+        else{
+            modelo.setValueAt(nombre, row, 0);
+            modelo.setValueAt(apellido, row, 1);
+            modelo.setValueAt(numero, row, 2);
+            modelo.setValueAt(correo, row, 3);
+            modelo.setValueAt(direccion, row, 4);
+            
+        }
+    }//GEN-LAST:event_boton_actualizarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -433,6 +520,7 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton boton_actualizar;
     private javax.swing.JButton boton_editar;
     private javax.swing.JButton boton_eliminar;
     private javax.swing.JButton boton_guardar;
@@ -457,4 +545,5 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JTable tabla_contactos;
     private javax.swing.JLabel titulo_label;
     // End of variables declaration//GEN-END:variables
+
 }
